@@ -19,14 +19,28 @@ type Query {
     smartSearch(keyword: String): [SmartSearchResult]
 
     additionalOnRequest: String
+
+    """Currently logged in user data"""
+    me: User!
+    problemLatestList: [Problem!]
+    itemSearch(filter: SearchItemFilter): [SearchableItem]
+    problemDetail(id: ID!): Problem
 }
 
 type Mutation {
     addHello(helloInput: HelloInput!): Int
     replaceHelloText(helloInput: HelloInput!): [Hello]
     deleteHello(number: Int!): Int
+    userCreate(user: UserCreateInput!): UserResponse!
+    userLogin(user: UserLoginInput!): UserResponse!
+    userActivation(user: UserActivationInput!): UserActivationResponse!
+    problemCreate(problem: ProblemCreateInput!): ProblemResponse!
+    solutionCreate(solution: SolutionCreateInput!): SolutionResponse!
+    solutionVote(vote: SolutionVoteInput!): SolutionResponse!
 }
 
 type Subscription {
     randomStock: Stock
+    problemAdded: Problem!
+    solutionVoteChanged(solutionId: ID!): Solution!
 }
