@@ -24,4 +24,8 @@ public class ProblemQueryService {
                         () -> new IllegalArgumentException(String.format("Problem with id %s not found", problemId))
                 );
     }
+
+    public List<Problem> findProblemsByKeyword(String keyword) {
+        return problemRepository.findByKeyword("%" + keyword + "%");
+    }
 }
