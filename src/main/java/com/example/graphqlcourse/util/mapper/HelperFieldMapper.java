@@ -1,4 +1,4 @@
-package com.example.graphqlcourse.datasource.repository;
+package com.example.graphqlcourse.util.mapper;
 
 import org.mapstruct.Mapper;
 import org.ocpsoft.prettytime.PrettyTime;

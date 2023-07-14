@@ -4,7 +4,6 @@ import com.course.graphql.generated.types.Problem;
 import com.course.graphql.generated.types.ProblemCreateInput;
 import com.example.graphqlcourse.datasource.entity.Solution;
 import com.example.graphqlcourse.datasource.entity.User;
-import com.example.graphqlcourse.datasource.repository.HelperFieldMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

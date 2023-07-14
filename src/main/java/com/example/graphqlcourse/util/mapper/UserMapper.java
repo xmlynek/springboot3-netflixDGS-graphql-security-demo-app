@@ -2,7 +2,6 @@ package com.example.graphqlcourse.util.mapper;
 
 import com.course.graphql.generated.types.User;
 import com.course.graphql.generated.types.UserCreateInput;
-import com.example.graphqlcourse.datasource.repository.HelperFieldMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

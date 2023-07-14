@@ -2,7 +2,6 @@ package com.example.graphqlcourse.util.mapper;
 
 import com.course.graphql.generated.types.UserAuthToken;
 import com.example.graphqlcourse.datasource.entity.UserToken;
-import com.example.graphqlcourse.datasource.repository.HelperFieldMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
