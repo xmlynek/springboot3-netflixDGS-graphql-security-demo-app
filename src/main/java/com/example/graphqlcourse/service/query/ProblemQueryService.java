@@ -2,6 +2,7 @@ package com.example.graphqlcourse.service.query;
 
 import com.example.graphqlcourse.datasource.entity.Problem;
 import com.example.graphqlcourse.datasource.repository.ProblemRepository;
+import com.netflix.graphql.dgs.exceptions.DgsEntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class ProblemQueryService {
     public Problem getProblemDetail(UUID problemId) {
         return problemRepository.findById(problemId)
                 .orElseThrow(
-                        () -> new IllegalArgumentException(String.format("Problem with id %s not found", problemId))
+                        () -> new DgsEntityNotFoundException(String.format("Problem with id %s not found", problemId))
                 );
     }
 

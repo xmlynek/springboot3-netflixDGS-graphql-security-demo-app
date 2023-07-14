@@ -3,6 +3,7 @@ package com.example.graphqlcourse.service.command;
 import com.example.graphqlcourse.datasource.entity.UserToken;
 import com.example.graphqlcourse.datasource.repository.UserRepository;
 import com.example.graphqlcourse.datasource.repository.UserTokenRepository;
+import com.example.graphqlcourse.exception.AuthenticationException;
 import com.example.graphqlcourse.util.HashUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -22,7 +23,7 @@ public class UserCommandService {
         var userOptional = userRepository.findByUsernameIgnoreCase(username);
 
         if (userOptional.isEmpty() || !HashUtils.isBcryptMatch(password, userOptional.get().getHashedPassword())) {
-            throw new IllegalArgumentException("Invalid credentials");
+            throw new AuthenticationException();
         }
 
         String randomAuthToken = RandomStringUtils.randomAlphanumeric(40);

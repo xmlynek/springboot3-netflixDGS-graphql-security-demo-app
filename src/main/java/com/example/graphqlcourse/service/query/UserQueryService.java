@@ -2,6 +2,7 @@ package com.example.graphqlcourse.service.query;
 
 import com.example.graphqlcourse.datasource.entity.User;
 import com.example.graphqlcourse.datasource.repository.UserRepository;
+import com.netflix.graphql.dgs.exceptions.DgsEntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,6 @@ public class UserQueryService {
 
     public User findUserByAuthToken(String authToken) {
         return userRepository.findUserByAuthToken(authToken)
-                .orElseThrow(() -> new IllegalArgumentException("User with given authToken not found"));
+                .orElseThrow(() -> new DgsEntityNotFoundException("User with given authToken not found"));
     }
 }
