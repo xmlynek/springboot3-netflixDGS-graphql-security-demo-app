@@ -70,6 +70,6 @@ public class ProblemDataResolver {
             field = DgsConstants.SUBSCRIPTION.ProblemAdded
     )
     public Flux<Problem> subscribeProblemAdded() {
-        return null;
+        return problemCommandService.problemFlux().map(problemMapper::problemToProblemQL);
     }
 }
