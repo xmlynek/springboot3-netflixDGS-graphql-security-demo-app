@@ -14,8 +14,7 @@ public class UserQueryService {
 
     private final UserRepository userRepository;
 
-    public User findUserByAuthToken(String authToken) {
-        return userRepository.findUserByAuthToken(authToken)
-                .orElseThrow(() -> new DgsEntityNotFoundException("User with given authToken not found"));
+    public Optional<User> findUserByAuthToken(String authToken) {
+        return userRepository.findUserByAuthToken(authToken);
     }
 }

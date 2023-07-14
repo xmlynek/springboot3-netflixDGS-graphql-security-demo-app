@@ -4,7 +4,10 @@ import com.course.graphql.generated.DgsConstants;
 import com.course.graphql.generated.types.Problem;
 import com.course.graphql.generated.types.ProblemCreateInput;
 import com.course.graphql.generated.types.ProblemResponse;
+import com.example.graphqlcourse.exception.AuthenticationException;
+import com.example.graphqlcourse.service.command.ProblemCommandService;
 import com.example.graphqlcourse.service.query.ProblemQueryService;
+import com.example.graphqlcourse.service.query.UserQueryService;
 import com.example.graphqlcourse.util.mapper.ProblemMapper;
 import com.example.graphqlcourse.util.mapper.ProblemMapperImpl;
 import com.netflix.graphql.dgs.DgsComponent;
@@ -23,7 +26,11 @@ import java.util.stream.Collectors;
 public class ProblemDataResolver {
 
     private final ProblemQueryService problemQueryService;
+    private final ProblemCommandService problemCommandService;
+    private final UserQueryService userQueryService;
+
     private final ProblemMapper problemMapper;
+
 
     @DgsData(
             parentType = DgsConstants.QUERY_TYPE,
@@ -50,7 +57,12 @@ public class ProblemDataResolver {
     public ProblemResponse createProblem(
             @RequestHeader(name = "authToken") String authToken,
             @InputArgument(name = "problem") ProblemCreateInput createInput) {
-        return null;
+        var user = userQueryService.findUserByAuthToken(authToken).orElseThrow(AuthenticationException::new);
+
+        var problem = problemCommandService.createProblem(problemMapper.problemCreateInputToProblem(createInput, user));
+        return ProblemResponse.newBuilder()
+                .problem(problemMapper.problemToProblemQL(problem))
+                .build();
     }
 
     @DgsData(

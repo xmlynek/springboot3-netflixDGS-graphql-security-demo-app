@@ -4,6 +4,7 @@ import com.course.graphql.generated.DgsConstants;
 import com.course.graphql.generated.types.*;
 import com.example.graphqlcourse.datasource.entity.UserToken;
 import com.example.graphqlcourse.datasource.repository.UserRepository;
+import com.example.graphqlcourse.exception.AuthenticationException;
 import com.example.graphqlcourse.service.command.UserCommandService;
 import com.example.graphqlcourse.service.query.UserQueryService;
 import com.example.graphqlcourse.util.mapper.UserMapper;
@@ -11,6 +12,7 @@ import com.example.graphqlcourse.util.mapper.UserTokenMapper;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
 import com.netflix.graphql.dgs.InputArgument;
+import com.netflix.graphql.dgs.exceptions.DgsEntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -30,7 +32,8 @@ public class UserDataResolver {
             field = DgsConstants.QUERY.Me
     )
     public User accountInfo(@RequestHeader(name = "authToken") String authToken) {
-        return userMapper.userToUserQL(userQueryService.findUserByAuthToken(authToken));
+        return userMapper.userToUserQL(userQueryService.findUserByAuthToken(authToken)
+                .orElseThrow(DgsEntityNotFoundException::new));
     }
 
     @DgsData(
@@ -49,7 +52,8 @@ public class UserDataResolver {
         UserAuthToken userAuthToken = userTokenMapper.userTokenToUserAuthTokenQL(
                 userCommandService.login(loginInput.getUsername(), loginInput.getPassword())
         );
-        var userInfo = userQueryService.findUserByAuthToken(userAuthToken.getAuthToken());
+        var userInfo = userQueryService.findUserByAuthToken(userAuthToken.getAuthToken())
+                .orElseThrow(AuthenticationException::new);
         return UserResponse.newBuilder()
                 .authToken(userAuthToken)
                 .user(userMapper.userToUserQL(userInfo))
