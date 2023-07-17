@@ -26,4 +26,5 @@ public class User {
     private String displayName;
     @Column(name = "active")
     private boolean isActive;
+    private String userRole;
 }

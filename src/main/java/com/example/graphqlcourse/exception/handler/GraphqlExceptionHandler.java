@@ -1,6 +1,7 @@
 package com.example.graphqlcourse.exception.handler;
 
 import com.example.graphqlcourse.exception.AuthenticationException;
+import com.example.graphqlcourse.exception.UnauthorizedException;
 import com.netflix.graphql.dgs.exceptions.DefaultDataFetcherExceptionHandler;
 import com.netflix.graphql.types.errors.TypedGraphQLError;
 import graphql.execution.DataFetcherExceptionHandler;
@@ -25,6 +26,17 @@ public class GraphqlExceptionHandler implements DataFetcherExceptionHandler {
                     .path(handlerParameters.getPath())
 //                    .errorType(ErrorType.UNAUTHENTICATED)
                     .errorDetail(new AuthenticationErrorDetails())
+                    .build();
+
+            var result = DataFetcherExceptionHandlerResult.newResult()
+                    .error(graphqlError).build();
+
+            return CompletableFuture.completedFuture(result);
+        } else if (exception instanceof UnauthorizedException) {
+            var graphqlError = TypedGraphQLError.newBuilder()
+                    .message(exception.getMessage())
+                    .path(handlerParameters.getPath())
+                    .errorDetail(new UnauthorizedErrorDetails())
                     .build();
 
             var result = DataFetcherExceptionHandlerResult.newResult()
