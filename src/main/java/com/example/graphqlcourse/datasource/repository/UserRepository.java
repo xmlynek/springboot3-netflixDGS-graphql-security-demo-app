@@ -1,6 +1,8 @@
 package com.example.graphqlcourse.datasource.repository;
 
 import com.example.graphqlcourse.datasource.entity.User;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +22,11 @@ public interface UserRepository extends CrudRepository<User, UUID> {
             "WHERE ut.authToken = :authToken " +
             "AND ut.expiryTimestamp > CURRENT TIMESTAMP ")
     Optional<User> findUserByAuthToken(@Param("authToken") String authToken);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE User u " +
+            "SET u.isActive = :isActive " +
+            "WHERE u.id = :userId")
+    void activateUser(@Param("userId") UUID userId, @Param("isActive") Boolean isActive);
 }

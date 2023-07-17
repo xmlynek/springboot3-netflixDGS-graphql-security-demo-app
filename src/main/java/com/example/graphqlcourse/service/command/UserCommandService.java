@@ -1,5 +1,6 @@
 package com.example.graphqlcourse.service.command;
 
+import com.example.graphqlcourse.datasource.entity.User;
 import com.example.graphqlcourse.datasource.entity.UserToken;
 import com.example.graphqlcourse.datasource.repository.UserRepository;
 import com.example.graphqlcourse.datasource.repository.UserTokenRepository;
@@ -8,8 +9,10 @@ import com.example.graphqlcourse.util.HashUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,6 +32,17 @@ public class UserCommandService {
         String randomAuthToken = RandomStringUtils.randomAlphanumeric(40);
         UserToken userToken = createRefreshToken(userOptional.get().getId(), randomAuthToken);
         return userTokenRepository.save(userToken);
+    }
+
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public Optional<User> activateUser(UUID userId, Boolean isActive) {
+        userRepository.activateUser(userId, isActive);
+
+        return userRepository.findById(userId);
     }
 
     private UserToken createRefreshToken(UUID userId, String authToken) {

@@ -41,7 +41,12 @@ public class UserDataResolver {
             field = DgsConstants.MUTATION.UserCreate
     )
     public UserResponse createUser(@InputArgument(name = "user") UserCreateInput createInput) {
-        return null;
+        var user = userMapper.userCreateInputToUser(createInput);
+        var createdUser = userCommandService.createUser(user);
+
+        return UserResponse.newBuilder()
+                .user(userMapper.userToUserQL(createdUser))
+                .build();
     }
 
     @DgsData(
@@ -65,6 +70,13 @@ public class UserDataResolver {
             field = DgsConstants.MUTATION.UserActivation
     )
     public UserActivationResponse userActivation(@InputArgument(name = "user") UserActivationInput userActivationInput) {
-        return null;
+        return userCommandService.activateUser(
+                UUID.fromString(userActivationInput.getUserId()),
+                userActivationInput.getActive()
+                )
+                .map(user -> UserActivationResponse.newBuilder()
+                        .isActive(user.isActive())
+                        .build())
+                .orElseThrow(DgsEntityNotFoundException::new);
     }
 }
