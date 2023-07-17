@@ -4,6 +4,8 @@ import com.example.graphqlcourse.datasource.entity.Solution;
 import com.example.graphqlcourse.datasource.repository.SolutionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -13,6 +15,7 @@ import java.util.UUID;
 public class SolutionCommandService {
 
     private final SolutionRepository solutionRepository;
+    private final Sinks.Many<Solution> solutionSinks = Sinks.many().multicast().onBackpressureBuffer();
 
     public Solution createSolution(Solution solution) {
         return solutionRepository.save(solution);
@@ -20,11 +23,23 @@ public class SolutionCommandService {
 
     public Optional<Solution> voteBad(UUID solutionId) {
         solutionRepository.addVoteBadCount(solutionId);
-        return solutionRepository.findById(solutionId);
+        var updated = solutionRepository.findById(solutionId);
+
+        updated.ifPresent(solutionSinks::tryEmitNext);
+
+        return updated;
     }
 
     public Optional<Solution> voteGood(UUID solutionId) {
         solutionRepository.addVoteGoodCount(solutionId);
-        return solutionRepository.findById(solutionId);
+        var updated = solutionRepository.findById(solutionId);
+
+        updated.ifPresent(solutionSinks::tryEmitNext);
+
+        return updated;
+    }
+
+    public Flux<Solution> solutionFlux() {
+        return solutionSinks.asFlux();
     }
 }
