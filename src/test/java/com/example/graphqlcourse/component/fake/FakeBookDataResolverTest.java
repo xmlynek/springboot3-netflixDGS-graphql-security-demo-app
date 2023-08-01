@@ -5,7 +5,6 @@ import com.course.graphql.generated.client.BooksByReleasedProjectionRoot;
 import com.course.graphql.generated.client.BooksGraphQLQuery;
 import com.course.graphql.generated.client.BooksProjectionRoot;
 import com.course.graphql.generated.types.Author;
-import com.course.graphql.generated.types.Book;
 import com.course.graphql.generated.types.ReleaseHistoryInput;
 import com.jayway.jsonpath.TypeRef;
 import com.netflix.graphql.dgs.DgsQueryExecutor;
